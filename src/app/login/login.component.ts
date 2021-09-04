@@ -1,6 +1,6 @@
 import { LoginService } from './../login.service';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError, filter } from 'rxjs/operators';
 import { of, throwError } from 'rxjs';
@@ -16,9 +16,16 @@ export class LoginComponent implements OnInit {
     password: '',
   };
 
-  constructor(private router: Router, private loginService: LoginService) {}
+  redirectUrl = '';
 
-  ngOnInit(): void {}
+  constructor(private route: ActivatedRoute, private router: Router, private loginService: LoginService) {}
+
+  ngOnInit(): void {
+    this.route.queryParamMap.subscribe(queryParamMap => {
+      console.log(queryParamMap.get('redirect'));
+      this.redirectUrl = queryParamMap.get('redirect');
+    });
+  }
 
   login() {
     // this.loginService.login(this.user).subscribe(result => {
@@ -55,7 +62,7 @@ export class LoginComponent implements OnInit {
         next: (result) => {
           console.log(result);
           localStorage.setItem('token', result.user.token);
-          this.router.navigateByUrl('/');
+          this.router.navigateByUrl(this.redirectUrl ?? '/');
         },
         error: (error) => {
           console.log(error);
