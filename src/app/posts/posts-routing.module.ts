@@ -1,4 +1,4 @@
-import { CreateComponent } from './../post/create/create.component';
+import { CreateComponent } from './create/create.component';
 import { PostComponent } from './post/post.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';

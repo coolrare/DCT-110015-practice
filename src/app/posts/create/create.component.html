@@ -1,0 +1,40 @@
+<div class="editor-page">
+  <div class="container page">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1 col-xs-12">
+        <form [formGroup]="post" (ngSubmit)="createPost()">
+          <fieldset class="form-group">
+            <input class="form-control form-control-lg" type="text" placeholder="Post Title" formControlName="title" />
+          </fieldset>
+          <fieldset class="form-group">
+            <textarea class="form-control" rows="3" placeholder="Description" formControlName="description"></textarea>
+          </fieldset>
+          <fieldset class="form-group">
+            <textarea class="form-control" rows="8" placeholder="Post body" formControlName="body"></textarea>
+          </fieldset>
+          <fieldset class="form-group" formArrayName="tags">
+            <input class="form-control" type="text" placeholder="Enter tags"
+              #tTag
+              (keydown.enter)="addTag(tTag.value); tTag.value = ''; $event.preventDefault()"
+            />
+            <div class="tag-list">
+              <!-- <input
+                *ngFor="let tag of tags.controls; let index = index"
+                [formControlName]="index"> -->
+
+              <span class="label label-pill label-default" *ngFor="let tag of tags.value; let index = index">
+                <i class="ion-close-round" (click)="removeTag(index)"></i> {{ tag }}</span>
+
+
+            </div>
+          </fieldset>
+          <button type="submit" class="btn btn-lg btn-primary pull-xs-right">
+            Create Post
+          </button>
+
+          {{ post.value | json }}
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
