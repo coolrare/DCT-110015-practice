@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { Article } from './../interfaces/article';
 import { PostService } from './../post.service';
 import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-posts',
@@ -15,8 +15,11 @@ export class PostsComponent implements OnInit {
 
   articles$: Observable<Article[]> = this.postService.getArticles()
     .pipe(
-      map(result => result.articles)
+      map(result => result.articles),
+      shareReplay(1, 3000)
     );
+
+  displayTime = 0;
 
   constructor(private postService: PostService) { }
 
@@ -27,6 +30,22 @@ export class PostsComponent implements OnInit {
     //   this.articles = result.articles;
     // });
 
+  }
+
+  displayClick() {
+    const cacheDuration = 3000;
+    this.displayArticles = !this.displayArticles;
+
+    const currentTime = (new Date()).getTime();
+
+    if(currentTime - this.displayTime >= cacheDuration) {
+      this.articles$ = this.postService.getArticles()
+        .pipe(
+          map(result => result.articles),
+          shareReplay(1, cacheDuration)
+        );
+      this.displayTime = currentTime;
+    }
   }
 
 }
