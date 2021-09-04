@@ -5,9 +5,21 @@
         <form [formGroup]="post" (ngSubmit)="createPost()">
           <fieldset class="form-group">
             <input class="form-control form-control-lg" type="text" placeholder="Post Title" formControlName="title" />
+
+            <div *ngIf="title.invalid">
+              <span *ngIf="title.errors.required">請輸入標題</span>
+            </div>
           </fieldset>
           <fieldset class="form-group">
             <textarea class="form-control" rows="3" placeholder="Description" formControlName="description"></textarea>
+
+            <div *ngIf="description.invalid">
+
+              <span *ngIf="description.errors.required">請輸入描述</span>
+              <span *ngIf="description.errors.minlength">長度不足</span>
+
+            </div>
+
           </fieldset>
           <fieldset class="form-group">
             <textarea class="form-control" rows="8" placeholder="Post body" formControlName="body"></textarea>
@@ -28,7 +40,7 @@
 
             </div>
           </fieldset>
-          <button type="submit" class="btn btn-lg btn-primary pull-xs-right">
+          <button type="submit" class="btn btn-lg btn-primary pull-xs-right" [disabled]="post.invalid">
             Create Post
           </button>
 

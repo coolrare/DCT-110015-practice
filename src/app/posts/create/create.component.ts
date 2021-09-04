@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder } from '@angular/forms';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
+
+const requireAndLength10 = Validators.compose([Validators.required, Validators.minLength(10)]);
+
+const requireAdnLength = (length: number) => {
+  return Validators.compose([Validators.required, Validators.minLength(length)]);
+}
 
 @Component({
   selector: 'app-create',
@@ -9,9 +15,9 @@ import { FormArray, FormBuilder } from '@angular/forms';
 export class CreateComponent implements OnInit {
 
   post = this.formBuilder.group({
-    title: this.formBuilder.control('title'),
-    description: this.formBuilder.control('desc'),
-    body: this.formBuilder.control('body'),
+    title: this.formBuilder.control('title', Validators.required),
+    description: this.formBuilder.control('desc', requireAndLength10),
+    body: this.formBuilder.control('body', requireAdnLength(100)),
     tags: this.formBuilder.array([
       this.formBuilder.control('HTML'),
       this.formBuilder.control('CSS'),
@@ -21,6 +27,14 @@ export class CreateComponent implements OnInit {
 
   get tags() {
     return this.post.get('tags') as FormArray;
+  }
+
+  get title() {
+    return this.post.get('title');
+  }
+
+  get description() {
+    return this.post.get('description');
   }
 
   constructor(private formBuilder: FormBuilder) { }
